@@ -5,16 +5,56 @@ public class Player : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
     [SerializeField] private GameInput gameInput;
+    [SerializeField] private LayerMask counterlayer;
 
+
+    private Vector3 lastinteract;
     private bool isWalking;
 
     private void Update()
+    {
+        HandePlayerMoving();
+        HandlePlayerInteraction();
+    }
+
+    public bool IsWalking()
+    {
+        return isWalking;
+    }
+
+    private void HandlePlayerInteraction()
+    {
+        Vector2 inputVector = gameInput.getmovement();
+
+        Vector3 movementVector = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
+        float interactDistance = 2f;
+        if (movementVector != Vector3.zero)
+        {
+            lastinteract = movementVector;
+        }
+
+        if (Physics.Raycast(transform.position, lastinteract, out RaycastHit racasHit, interactDistance, counterlayer))
+        {
+            // Debug.Log(racasHit.transform.TryGetComponent(out ClearCounter clearCounter));      
+            if (racasHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                //has clear counter
+                clearCounter.interact();
+            }
+            else
+            {
+                Debug.Log("Interacted with the Clear Counter");
+            }
+        }
+    }
+
+    private void HandePlayerMoving()
     {
         Vector2 inputVector = gameInput.getmovement();
         Vector3 movementVector = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
 
         float moveDistance = moveSpeed * Time.deltaTime;
-        float playerHeight = 3f;
+        float playerHeight = 2f;
         float playerRadius = 0.7f;
 
         bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
@@ -49,10 +89,4 @@ public class Player : MonoBehaviour
         isWalking = (movementVector != Vector3.zero);
         transform.forward = Vector3.Slerp(transform.forward, movementVector, Time.deltaTime * rotateSpeed);
     }
-
-    public bool IsWalking()
-    {
-        return isWalking;
-    }
 }
-
