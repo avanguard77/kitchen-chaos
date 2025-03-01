@@ -1,33 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameInput : MonoBehaviour
 {
-    
+    private PlayerInputSystem playerInputSystem;
+
+    private void Awake()
+    {
+        playerInputSystem = new PlayerInputSystem();
+        playerInputSystem.Player.Enable();
+    }
 
     public Vector2 getmovement()
     {
-        
-        Vector2 inputvector = new Vector2(0f, 0f);
-        if (Input.GetKey(KeyCode.W))
-        {
-            inputvector.y += 1f;
-        }
-        else if (Input.GetKey(KeyCode.S))
-        {
-            inputvector.y -= 1f;
-        }
-        else if (Input.GetKey(KeyCode.A))
-        {
-            inputvector.x -= 1f;
-        }
-        else if (Input.GetKey(KeyCode.D))
-        {
-            inputvector.x += 1f;
-        }
+        Vector2 inputvector = playerInputSystem.Player.Move.ReadValue<Vector2>();
 
         inputvector = inputvector.normalized;
+
         return inputvector;
     }
 }
