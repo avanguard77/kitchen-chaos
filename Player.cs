@@ -17,12 +17,37 @@ public class Player : MonoBehaviour
         float moveDiraction = Time.deltaTime * moveSpeed;
         float playerhight = 2f;
         float playerradius = .7f;
-        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerhight, playerradius, movementvector, moveDiraction);
+
+
+        bool canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerhight,
+            playerradius, movementvector, moveDiraction);
+
+        if (!canMove)
+        {
+            Vector3 moveVectorX = new Vector3(movementvector.x, 0, 0).normalized;
+            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerhight,
+                playerradius, moveVectorX, moveDiraction);
+            if (canMove)
+            {
+                movementvector = moveVectorX.normalized;
+            }
+            else
+            {
+                Vector3 moveVectorZ = new Vector3(0, 0, movementvector.z).normalized;
+                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerhight,
+                    playerradius, moveVectorZ, moveDiraction);
+                if (canMove)
+                {
+                    movementvector = moveVectorZ.normalized;
+                }
+            }
+        }
+
         if (canMove)
         {
             transform.position += movementvector * moveDiraction;
         }
-        
+
         isWalking = (movementvector != Vector3.zero);
 
         // transform.LookAt(transform.position + movementvector, Vector3.up);
