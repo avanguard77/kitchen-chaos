@@ -1,15 +1,47 @@
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
+
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask counterlayer;
-
-
+    
     private Vector3 lastinteract;
     private bool isWalking;
+
+    private void Start()
+    {
+        gameInput.OnInteraction += GameInput_Interaction;
+    }
+
+    void GameInput_Interaction(object sender, System.EventArgs e)
+    {
+        Vector2 inputVector = gameInput.getmovement();
+
+        Vector3 movementVector = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
+        float interactDistance = 2f;
+        if (movementVector != Vector3.zero)
+        {
+            lastinteract = movementVector;
+        }
+
+        if (Physics.Raycast(transform.position, lastinteract, out RaycastHit racasHit, interactDistance, counterlayer))
+        {
+            // Debug.Log(racasHit.transform.TryGetComponent(out ClearCounter clearCounter));      
+            if (racasHit.transform.TryGetComponent(out ClearCounter clearCounter))
+            {
+                //has clear counter
+                clearCounter.interact();
+            }
+            else
+            {
+                Debug.Log("Interacted with the Clear Counter");
+            }
+        }
+    }
 
     private void Update()
     {
@@ -39,7 +71,7 @@ public class Player : MonoBehaviour
             if (racasHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
                 //has clear counter
-                clearCounter.interact();
+                // clearCounter.interact();
             }
             else
             {
