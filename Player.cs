@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
 
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask counterlayer;
-    
+    private ClearCounter selectedClearCounter;
+
     private Vector3 lastinteract;
     private bool isWalking;
 
@@ -19,7 +20,12 @@ public class Player : MonoBehaviour
 
     void GameInput_Interaction(object sender, System.EventArgs e)
     {
-        Vector2 inputVector = gameInput.getmovement();
+        if (selectedClearCounter != null)
+        {
+            selectedClearCounter.interact();
+        }
+
+        Vector2 inputVector = gameInput.Getmovement();
 
         Vector3 movementVector = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
         float interactDistance = 2f;
@@ -56,7 +62,7 @@ public class Player : MonoBehaviour
 
     private void HandlePlayerInteraction()
     {
-        Vector2 inputVector = gameInput.getmovement();
+        Vector2 inputVector = gameInput.Getmovement();
 
         Vector3 movementVector = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
         float interactDistance = 2f;
@@ -70,19 +76,27 @@ public class Player : MonoBehaviour
             // Debug.Log(racasHit.transform.TryGetComponent(out ClearCounter clearCounter));      
             if (racasHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
-                //has clear counter
-                // clearCounter.interact();
+                if (selectedClearCounter != clearCounter)
+                {
+                    selectedClearCounter = clearCounter;
+                }
             }
             else
             {
-                Debug.Log("Interacted with the Clear Counter");
+                selectedClearCounter = null;
             }
         }
+        else
+        {
+            selectedClearCounter = null;
+        }
+
+        Debug.Log(selectedClearCounter);
     }
 
     private void HandePlayerMoving()
     {
-        Vector2 inputVector = gameInput.getmovement();
+        Vector2 inputVector = gameInput.Getmovement();
         Vector3 movementVector = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
 
         float moveDistance = moveSpeed * Time.deltaTime;

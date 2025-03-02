@@ -25,7 +25,7 @@ public class GameInput : MonoBehaviour
         }
     }
 
-    public Vector2 getmovement()
+    public Vector2 Getmovement()
     {
         Vector2 inputvector = playerInputSystem.Player.Move.ReadValue<Vector2>();
 
