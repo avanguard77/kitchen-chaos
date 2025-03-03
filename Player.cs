@@ -3,15 +3,32 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance{private set;get;}
+    public event EventHandler<OnSelectectedCounterChangedEventArgs> onSelectectedCounterChanged;
+
+    public class OnSelectectedCounterChangedEventArgs : EventArgs
+    {
+        public ClearCounter selectectedCounter;
+    }
+
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
 
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask counterlayer;
-    private ClearCounter selectedClearCounter;
 
+    private ClearCounter selectedClearCounter;
     private Vector3 lastinteract;
     private bool isWalking;
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Debug.LogError("There is no instance Player");
+        }
+        Instance = this;
+    }
 
     private void Start()
     {
@@ -78,17 +95,17 @@ public class Player : MonoBehaviour
             {
                 if (selectedClearCounter != clearCounter)
                 {
-                    selectedClearCounter = clearCounter;
+                    SetSelectectedCounter(clearCounter);
                 }
             }
             else
             {
-                selectedClearCounter = null;
+                SetSelectectedCounter(null);
             }
         }
         else
         {
-            selectedClearCounter = null;
+           SetSelectectedCounter(null);
         }
 
         Debug.Log(selectedClearCounter);
@@ -134,5 +151,13 @@ public class Player : MonoBehaviour
 
         isWalking = (movementVector != Vector3.zero);
         transform.forward = Vector3.Slerp(transform.forward, movementVector, Time.deltaTime * rotateSpeed);
+    }
+
+    private void SetSelectectedCounter(ClearCounter selectectedCounter)
+    {
+        this.selectedClearCounter = selectectedCounter;
+        
+        onSelectectedCounterChanged?.Invoke(this,
+            new OnSelectectedCounterChangedEventArgs { selectectedCounter = selectedClearCounter });
     }
 }
