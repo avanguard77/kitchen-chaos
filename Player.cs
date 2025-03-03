@@ -23,10 +23,7 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
-        {
-            Debug.LogError("There is no instance Player");
-        }
+        
         Instance = this;
     }
 
