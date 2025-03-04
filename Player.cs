@@ -13,6 +13,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
+    
 
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask counterlayer;
@@ -21,6 +22,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     private KitchenObject kitchenObject;
     private ClearCounter selectedClearCounter;
     private Vector3 lastinteract;
+    
     private bool isWalking;
 
     private void Awake()
