@@ -29,7 +29,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
     {
         Instance = this;
     }
-
     private void Start()
     {
         gameInput.OnInteraction += GameInput_Interaction;
