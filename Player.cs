@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IKitchenObjectParent
 {
-    public static Player Instance{private set;get;}
+    public static Player Instance { private set; get; }
     public event EventHandler<OnSelectectedCounterChangedEventArgs> onSelectectedCounterChanged;
 
     public class OnSelectectedCounterChangedEventArgs : EventArgs
@@ -16,14 +16,15 @@ public class Player : MonoBehaviour
 
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask counterlayer;
-
+    [SerializeField] private Transform kitchenObjectHolder;
+    
+    private KitchenObject kitchenObject;
     private ClearCounter selectedClearCounter;
     private Vector3 lastinteract;
     private bool isWalking;
 
     private void Awake()
     {
-        
         Instance = this;
     }
 
@@ -36,7 +37,7 @@ public class Player : MonoBehaviour
     {
         if (selectedClearCounter != null)
         {
-            selectedClearCounter.interact();
+            selectedClearCounter.interact(this);
         }
 
         Vector2 inputVector = gameInput.Getmovement();
@@ -54,7 +55,7 @@ public class Player : MonoBehaviour
             if (racasHit.transform.TryGetComponent(out ClearCounter clearCounter))
             {
                 //has clear counter
-                clearCounter.interact();
+                //
             }
             else
             {
@@ -102,7 +103,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-           SetSelectectedCounter(null);
+            SetSelectectedCounter(null);
         }
 
         Debug.Log(selectedClearCounter);
@@ -153,8 +154,33 @@ public class Player : MonoBehaviour
     private void SetSelectectedCounter(ClearCounter selectectedCounter)
     {
         this.selectedClearCounter = selectectedCounter;
-        
+
         onSelectectedCounterChanged?.Invoke(this,
             new OnSelectectedCounterChangedEventArgs { selectectedCounter = selectedClearCounter });
+    }
+
+    public Transform getFollowTransform()
+    {
+        return kitchenObjectHolder;
+    }
+
+    public void setKitchenObject(KitchenObject kitchenObject)
+    {
+        this.kitchenObject = kitchenObject;
+    }
+
+    public KitchenObject getKitchenObject()
+    {
+        return kitchenObject;
+    }
+
+    public void ClearKitchenObject()
+    {
+        kitchenObject = null;
+    }
+
+    public bool hasKitchenObject()
+    {
+        return kitchenObject != null;
     }
 }
