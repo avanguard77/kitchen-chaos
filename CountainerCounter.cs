@@ -1,11 +1,10 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ClearCounter : BaseCounter
+public class CountainerCounter : BaseCounter
 {
-   
+    
     
 
     public override void interact(Player player)
@@ -13,14 +12,8 @@ public class ClearCounter : BaseCounter
         if (kitchenObject == null)
         {
             Transform kitchenObjectTransform = Instantiate(kitchenObjectSo.prefab, target);
-            kitchenObjectTransform.GetComponent<KitchenObject>().setKitchenObjectParent(this);
-        }
-        else
-        {
-            kitchenObject.setKitchenObjectParent(player);
-            Debug.Log(kitchenObject);
+            kitchenObjectTransform.GetComponent<KitchenObject>().setKitchenObjectParent(player);
         }
     }
-
-   
+    
 }

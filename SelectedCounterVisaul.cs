@@ -5,8 +5,8 @@ using UnityEngine;
 
 public class SelectedCounterVisaul : MonoBehaviour
 {
-    [SerializeField] ClearCounter counter;
-    [SerializeField] GameObject visaulGameObject;
+    [SerializeField] BaseCounter counter;
+    [SerializeField] GameObject[] visaulGameObject;
     private void Start()
     {
         Player.Instance.onSelectectedCounterChanged+= Player_Onselected; 
@@ -26,11 +26,18 @@ public class SelectedCounterVisaul : MonoBehaviour
 
     private void Hide()
     {
-        visaulGameObject.SetActive(false);
+        foreach (GameObject go in visaulGameObject)
+        {
+            go.SetActive(false);    
+        }
+        
     }
 
     private void Show()
     {
-        visaulGameObject.SetActive(true);
+        foreach (GameObject go in visaulGameObject)
+        {
+            go.SetActive(true);    
+        }
     }
 }
