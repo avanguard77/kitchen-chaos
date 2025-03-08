@@ -45,7 +45,6 @@ public class CuttinCounter : BaseCounter
         }
         else
         {
-            
         }
     }
 }
