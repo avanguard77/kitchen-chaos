@@ -6,19 +6,35 @@ using UnityEngine;
 public class ClearCounter : BaseCounter
 {
    
-    
+    [SerializeField]private KitchenObjectSo kitchenObject;
 
     public override void interact(Player player)
     {
-        if (kitchenObject == null)
+        if (!hasKitchenObject())
         {
-            Transform kitchenObjectTransform = Instantiate(kitchenObjectSo.prefab, target);
-            kitchenObjectTransform.GetComponent<KitchenObject>().setKitchenObjectParent(this);
+            //there is no kitchen Object here
+            if (player.hasKitchenObject())
+            {
+                //player is carring sth
+                player.getKitchenObject().setKitchenObjectParent(this);
+            }
+            else
+            {
+                //player is not carring sth
+            }
         }
         else
         {
-            kitchenObject.setKitchenObjectParent(player);
-            Debug.Log(kitchenObject);
+            //there is kitchen object 
+            if (player.hasKitchenObject())
+            {
+                //player is carring 
+            }
+            else
+            {
+                //player is not 
+                getKitchenObject().setKitchenObjectParent(player);
+            }
         }
     }
 

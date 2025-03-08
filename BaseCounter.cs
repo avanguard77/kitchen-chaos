@@ -6,8 +6,6 @@ public class BaseCounter : MonoBehaviour, IKitchenObjectParent
 {
     [SerializeField] protected Transform target;
     [SerializeField] protected KitchenObjectSo kitchenObjectSo;
-    [SerializeField] protected ClearCounter secondClearCounter;
-    [SerializeField] private bool testing;
     protected KitchenObject kitchenObject;
 
     public virtual void interact(Player player)
