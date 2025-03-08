@@ -89,6 +89,7 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
         if (Physics.Raycast(transform.position, lastinteract, out RaycastHit racasHit, interactDistance, counterlayer))
         {
+            Debug.DrawLine(transform.position, lastinteract, Color.red);
             // Debug.Log(racasHit.transform.TryGetComponent(out ClearCounter clearCounter));      
             if (racasHit.transform.TryGetComponent(out BaseCounter clearCounter))
             {
