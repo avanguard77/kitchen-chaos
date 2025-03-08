@@ -13,25 +13,35 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float rotateSpeed = 5f;
-    
+
 
     [SerializeField] private GameInput gameInput;
     [SerializeField] private LayerMask counterlayer;
     [SerializeField] private Transform kitchenObjectHolder;
-    
+
     private KitchenObject kitchenObject;
     private BaseCounter selectedClearCounter;
     private Vector3 lastinteract;
-    
+
     private bool isWalking;
 
     private void Awake()
     {
         Instance = this;
     }
+
     private void Start()
     {
         gameInput.OnInteraction += GameInput_Interaction;
+        gameInput.OnInteractionAlternative+=GameInputOnOnInteractionAlternative;
+    }
+
+    private void GameInputOnOnInteractionAlternative(object sender, EventArgs e)
+    {
+        if (selectedClearCounter != null)
+        {
+            selectedClearCounter.interactAlternative(this);
+        }
     }
 
     void GameInput_Interaction(object sender, System.EventArgs e)
@@ -89,7 +99,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
 
         if (Physics.Raycast(transform.position, lastinteract, out RaycastHit racasHit, interactDistance, counterlayer))
         {
-            Debug.DrawLine(transform.position, lastinteract, Color.red);
             // Debug.Log(racasHit.transform.TryGetComponent(out ClearCounter clearCounter));      
             if (racasHit.transform.TryGetComponent(out BaseCounter clearCounter))
             {
@@ -107,8 +116,6 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         {
             SetSelectectedCounter(null);
         }
-
-        Debug.Log(selectedClearCounter);
     }
 
     private void HandePlayerMoving()
@@ -126,7 +133,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
         if (!canMove)
         {
             Vector3 moveVectorX = new Vector3(movementVector.x, 0, 0).normalized;
-            canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
+            canMove = movementVector.x == 0 && !Physics.CapsuleCast(transform.position,
+                transform.position + Vector3.up * playerHeight,
                 playerRadius, moveVectorX, moveDistance);
             if (canMove)
             {
@@ -135,7 +143,8 @@ public class Player : MonoBehaviour, IKitchenObjectParent
             else
             {
                 Vector3 moveVectorZ = new Vector3(0, 0, movementVector.z).normalized;
-                canMove = !Physics.CapsuleCast(transform.position, transform.position + Vector3.up * playerHeight,
+                canMove = movementVector.z == 0 && !Physics.CapsuleCast(transform.position,
+                    transform.position + Vector3.up * playerHeight,
                     playerRadius, moveVectorZ, moveDistance);
                 if (canMove)
                 {

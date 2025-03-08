@@ -11,8 +11,7 @@ public class CountainerCounter : BaseCounter
     {
         if (!player.hasKitchenObject())
         {
-            Transform kitchenObjectTransform = Instantiate(kitchenObjectSo.prefab, target);
-            kitchenObjectTransform.GetComponent<KitchenObject>().setKitchenObjectParent(player);
+            KitchenObject.SpawnKitchenObject(kitchenObjectSo, player);
             OnPlayerGrabedObject?.Invoke(this, EventArgs.Empty);
         }
     }
