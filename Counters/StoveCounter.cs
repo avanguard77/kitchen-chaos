@@ -3,9 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StoveCounter : BaseCounter
+public class StoveCounter : BaseCounter,IHasProgress
 {
-    enum State
+    public event EventHandler<OnStateChangedArges> OnStateChanged;
+    public event EventHandler<IHasProgress.OnProgressChangedEventArg> OnProgressChanged;
+
+    public class OnStateChangedArges : EventArgs
+    {
+        public State state;
+    }
+
+    public enum State
     {
         Idle,
         Frying,
@@ -15,7 +23,7 @@ public class StoveCounter : BaseCounter
 
     [SerializeField] FryingRecepiSo[] fryingRecepiSoArray;
     [SerializeField] BurningRecepiSo[] burningRecepiSoArray;
-    
+
 
     private FryingRecepiSo fryingRecepiSo;
     private BurningRecepiSo burningRecepiSo;
@@ -41,6 +49,11 @@ public class StoveCounter : BaseCounter
                 case State.Frying:
                 {
                     fryingTimer += Time.deltaTime;
+                    
+                    OnProgressChanged?.Invoke(this,new IHasProgress.OnProgressChangedEventArg()
+                    {
+                        progressNormalized = fryingTimer/fryingRecepiSo.fruingRecepiSoTimer
+                    });
 
                     if (fryingTimer >= fryingRecepiSo.fruingRecepiSoTimer)
                     {
@@ -51,12 +64,21 @@ public class StoveCounter : BaseCounter
                         state = State.Fried;
                         burningTimer = 0;
                         burningRecepiSo = GetBurningRecepiSowithInput(getKitchenObject().GetKitchenObjectSo());
+                        OnStateChanged?.Invoke(this, new OnStateChangedArges { state = state });
+                        
+                        
+                        
                     }
                 }
                     break;
                 case State.Fried:
                 {
-                    fryingTimer += Time.deltaTime;
+                    burningTimer += Time.deltaTime;
+                    
+                    OnProgressChanged?.Invoke(this,new IHasProgress.OnProgressChangedEventArg()
+                    {
+                        progressNormalized = burningTimer/burningRecepiSo.burningTimerMax
+                    });
 
                     if (burningTimer >= burningRecepiSo.burningTimerMax)
                     {
@@ -65,6 +87,11 @@ public class StoveCounter : BaseCounter
 
                         KitchenObject.SpawnKitchenObject(burningRecepiSo.output, this);
                         state = State.Burned;
+                        OnStateChanged?.Invoke(this, new OnStateChangedArges { state = state });
+                        OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArg()
+                        {
+                            progressNormalized = 0f
+                        });
                     }
                 }
                     break;
@@ -88,7 +115,12 @@ public class StoveCounter : BaseCounter
                     player.getKitchenObject().setKitchenObjectParent(this);
                     fryingRecepiSo = GetFriyingRecepiSowithInput(getKitchenObject().GetKitchenObjectSo());
                     state = State.Frying;
+                    OnStateChanged?.Invoke(this, new OnStateChangedArges { state = state });
                     fryingTimer = 0f;
+                    OnProgressChanged?.Invoke(this,new IHasProgress.OnProgressChangedEventArg()
+                    {
+                        progressNormalized = fryingTimer/fryingRecepiSo.fruingRecepiSoTimer
+                    });
                 }
             }
             else
@@ -107,6 +139,12 @@ public class StoveCounter : BaseCounter
             {
                 //player is not 
                 getKitchenObject().setKitchenObjectParent(player);
+                state = State.Idle;
+                OnStateChanged?.Invoke(this, new OnStateChangedArges { state = state });
+                OnProgressChanged?.Invoke(this,new IHasProgress.OnProgressChangedEventArg()
+                {
+                    progressNormalized = 0f
+                });
             }
         }
     }
@@ -140,6 +178,7 @@ public class StoveCounter : BaseCounter
 
         return null;
     }
+
     private FryingRecepiSo GetFriyingRecepiSowithInput(KitchenObjectSo inputKitchenObjectSo)
     {
         foreach (FryingRecepiSo fryingRecepiSo in fryingRecepiSoArray)
