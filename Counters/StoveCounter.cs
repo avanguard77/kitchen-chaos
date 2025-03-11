@@ -137,7 +137,6 @@ public class StoveCounter : BaseCounter, IHasProgress
                     if (plateKitchenObject.TryAddGradiant(getKitchenObject().GetKitchenObjectSo()))
                     {
                         getKitchenObject().destroySelf();
-                        getKitchenObject().setKitchenObjectParent(player);
                         state = State.Idle;
                         OnStateChanged?.Invoke(this, new OnStateChangedArges { state = state });
                         OnProgressChanged?.Invoke(this, new IHasProgress.OnProgressChangedEventArg()
