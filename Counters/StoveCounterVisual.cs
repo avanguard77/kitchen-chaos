@@ -19,5 +19,12 @@ public class StoveCounterVisual : MonoBehaviour
         bool show = (e.state==StoveCounter.State.Fried || e.state==StoveCounter.State.Frying);
         stoveOnGameObject.SetActive(show);
         particleGameObject.SetActive(show);
+        
+        
+        if (e.state==StoveCounter.State.Burned )
+        {
+            stoveOnGameObject.SetActive(false);
+            particleGameObject.SetActive(false);
+        }
     }
 }

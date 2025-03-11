@@ -42,6 +42,14 @@ public class CuttinCounter : BaseCounter,IHasProgress
             if (player.hasKitchenObject())
             {
                 //player is carring 
+                if (player.getKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
+                {
+                    //there is a Plate that it is holding
+                    if (plateKitchenObject.TryAddGradiant(getKitchenObject().GetKitchenObjectSo()))
+                    {
+                        getKitchenObject().destroySelf();
+                    }
+                }
             }
             else
             {

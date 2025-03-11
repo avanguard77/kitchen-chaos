@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class ClearCounter : BaseCounter
 {
-   
-    [SerializeField]private KitchenObjectSo kitchenObject;
+    [SerializeField] private KitchenObjectSo kitchenObject;
 
     public override void interact(Player player)
     {
@@ -29,6 +28,25 @@ public class ClearCounter : BaseCounter
             if (player.hasKitchenObject())
             {
                 //player is carring 
+                if (player.getKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
+                {
+                    //there is a Plate that it is holding
+                    if (plateKitchenObject.TryAddGradiant(getKitchenObject().GetKitchenObjectSo()))
+                    {
+                        getKitchenObject().destroySelf();
+                    }
+                }
+                else
+                {
+                    //player is not holding plate but sth else 
+                    if (getKitchenObject().TryGetPlate(out plateKitchenObject))
+                    {
+                        if (plateKitchenObject.TryAddGradiant(player.getKitchenObject().GetKitchenObjectSo()))
+                        {
+                            player.getKitchenObject().destroySelf();
+                        }
+                    }
+                }
             }
             else
             {
@@ -37,6 +55,4 @@ public class ClearCounter : BaseCounter
             }
         }
     }
-
-   
 }
