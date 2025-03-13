@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TrashCounter : BaseCounter
 {
+    
     public override void interact(Player player)
     {
         if (player.hasKitchenObject())
