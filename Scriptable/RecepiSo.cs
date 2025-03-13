@@ -6,4 +6,5 @@ public class RecepiSo : ScriptableObject
 {
     public List<KitchenObjectSo> KitchenObjectSoLiast;
     public string RecepiSoName;
+    
 }
