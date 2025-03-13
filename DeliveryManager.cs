@@ -15,14 +15,15 @@ public class DeliveryManager : MonoBehaviour
 
     private List<RecepiSo> waitingRecepiSoList;
     private float spawnRecepiSoTimer;
-    private const float spawnRecepiSoTimerMax = 4f; 
+    private const float spawnRecepiSoTimerMax = 4f;
     private int waitingRecepiSoCountMax = 4;
+    public int succesfulRecepiAmount = 0;
 
     private void Awake()
     {
         Instance = this;
         waitingRecepiSoList = new List<RecepiSo>();
-        spawnRecepiSoTimer = spawnRecepiSoTimerMax; 
+        spawnRecepiSoTimer = spawnRecepiSoTimerMax;
     }
 
     private void Update()
@@ -30,13 +31,12 @@ public class DeliveryManager : MonoBehaviour
         spawnRecepiSoTimer -= Time.deltaTime;
         if (spawnRecepiSoTimer <= 0)
         {
-            spawnRecepiSoTimer = spawnRecepiSoTimerMax; 
+            spawnRecepiSoTimer = spawnRecepiSoTimerMax;
             if (waitingRecepiSoList.Count < waitingRecepiSoCountMax)
             {
                 RecepiSo waitingRecepiSo = recepiListSo.RecepiSoList[Random.Range(0, recepiListSo.RecepiSoList.Count)];
                 waitingRecepiSoList.Add(waitingRecepiSo);
-                OnRecepiSpawned?.Invoke(this, EventArgs.Empty); 
-                
+                OnRecepiSpawned?.Invoke(this, EventArgs.Empty);
             }
         }
     }
@@ -73,7 +73,7 @@ public class DeliveryManager : MonoBehaviour
                 {
                     //delivered
                     waitingRecepiSoList.RemoveAt(i);
-
+                    succesfulRecepiAmount++;
                     OnRecepiCompleted?.Invoke(this, EventArgs.Empty);
 
                     return;
@@ -85,5 +85,10 @@ public class DeliveryManager : MonoBehaviour
     public List<RecepiSo> GetRecepiSoList()
     {
         return waitingRecepiSoList;
+    }
+
+    public int GetSuccesfulRecepiAmount()
+    {
+        return succesfulRecepiAmount;
     }
 }
