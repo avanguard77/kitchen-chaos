@@ -7,6 +7,6 @@ public class ResetStaticData : MonoBehaviour
     
     void Awake()
     {
-    CuttinCounter.ResetOnCut();
+    
     }
 }

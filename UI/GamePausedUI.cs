@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class GamePausedUI : MonoBehaviour
@@ -10,16 +11,14 @@ public class GamePausedUI : MonoBehaviour
 
     [SerializeField] private Button resumeButton;
 
+    [FormerlySerializedAs("OptionsButton")] [SerializeField]
+    private Button optionsButton;
+
     private void Awake()
     {
-        backMenuButton.onClick.AddListener(() =>
-        {
-            KitchenManager.instance.PuaseGame();
-        });
-        resumeButton.onClick.AddListener(() =>
-        {
-            Loader.Load(Loader.Scene.GameMenuScene);
-        });
+        backMenuButton.onClick.AddListener(() => { Loader.Load(Loader.Scene.GameMenuScene); });
+        resumeButton.onClick.AddListener(() => { KitchenManager.instance.PuaseGame(); });
+        optionsButton.onClick.AddListener(() => { OptionUI.instance.Show(); });
     }
 
     private void Start()

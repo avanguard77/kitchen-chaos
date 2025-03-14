@@ -8,12 +8,9 @@ public class CuttinCounter : BaseCounter,IHasProgress
     public event EventHandler<IHasProgress.OnProgressChangedEventArg> OnProgressChanged;
     
 
-    public static event EventHandler OnCut;
+    public event EventHandler OnCut;
 
-    public static void ResetOnCut()
-    {
-        OnCut = null;
-    }
+   
 
     [SerializeField] private CuttingRecepiSo[] cuttingObjectSo;
     private int cuttingProgress;
